@@ -38,8 +38,8 @@ def get_coin_name_list(config, online):
 
 def calculate_pv_after_commission(w1, w0, commission_rate):
     """
-    @:param w1: target portfolio vector, first element is btc
-    @:param w0: rebalanced last period portfolio vector, first element is btc
+    @:param w1: target portfolio vector, first element is KRW
+    @:param w0: rebalanced last period portfolio vector, first element is KRW
     @:param commission_rate: rate of commission fee, proportional to the transaction cost
     """
     mu0 = 1
@@ -67,11 +67,11 @@ def get_test_data(config):
     return test_set
 
 
-def asset_vector_to_dict(coin_list, vector, with_BTC=True):
+def asset_vector_to_dict(coin_list, vector, with_krw=True):
     vector = np.squeeze(vector)
     dict_coin = {}
-    if with_BTC:
-        dict_coin['BTC'] = vector[0]
+    if with_krw:
+        dict_coin['KRW'] = vector[0]
     for i, name in enumerate(coin_list):
         if vector[i+1] > 0:
             dict_coin[name] = vector[i + 1]

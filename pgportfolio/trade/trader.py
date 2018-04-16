@@ -7,7 +7,7 @@ import time
 
 
 class Trader:
-    def __init__(self, waiting_period, config, total_steps, net_dir, agent=None, initial_BTC=1.0, agent_type="nn"):
+    def __init__(self, waiting_period, config, total_steps, net_dir, agent=None, initial_krw=1.0, agent_type="nn"):
         """
         @:param agent_type: string, could be nn or traditional
         @:param agent: the traditional agent object, if the agent_type is traditional
@@ -31,8 +31,8 @@ class Trader:
             raise ValueError()
         self._agent = agent
 
-        # the total assets is calculated with BTC
-        self._total_capital = initial_BTC
+        # the total assets is calculated with KRW
+        self._total_capital = initial_krw
         self._window_size = config["input"]["window_size"]
         self._coin_number = config["input"]["coin_number"]
         self._commission_rate = config["trading"]["trading_consumption"]
@@ -43,15 +43,15 @@ class Trader:
         self._last_omega[0] = 1.0
 
         if self.__class__.__name__=="BackTest":
-            # self._initialize_logging_data_frame(initial_BTC)
+            # self._initialize_logging_data_frame(initial_krw)
             self._logging_data_frame = None
             # self._disk_engine =  sqlite3.connect('./database/back_time_trading_log.db')
             # self._initialize_data_base()
         self._current_error_state = 'S000'
         self._current_error_info = ''
 
-    def _initialize_logging_data_frame(self, initial_BTC):
-        logging_dict = {'Total Asset (BTC)': initial_BTC, 'BTC': 1}
+    def _initialize_logging_data_frame(self, initial_krw):
+        logging_dict = {'Total Asset (KRW)': initial_krw, 'KRW': 1}
         for coin in self._coin_name_list:
             logging_dict[coin] = 0
         self._logging_data_frame = pd.DataFrame(logging_dict, index=pd.to_datetime([time.time()], unit='s'))
@@ -68,7 +68,7 @@ class Trader:
     def _log_trading_info(self, time, omega):
         time_index = pd.to_datetime([time], unit='s')
         if self._steps > 0:
-            logging_dict = {'Total Asset (BTC)': self._total_capital, 'BTC': omega[0, 0]}
+            logging_dict = {'Total Asset (KRW)': self._total_capital, 'KRW': omega[0, 0]}
             for i in range(len(self._coin_name_list)):
                 logging_dict[self._coin_name_list[i]] = omega[0, i + 1]
             new_data_frame = pd.DataFrame(logging_dict, index=time_index)
@@ -95,7 +95,7 @@ class Trader:
             self.rolling_train()
         if not self.__class__.__name__=="BackTest":
             self._last_omega = omega.copy()
-        logging.info('total assets are %3f BTC' % self._total_capital)
+        logging.info('total assets are %3f KRW' % self._total_capital)
         logging.debug("="*30)
         trading_time = time.time() - starttime
         if trading_time < self._period:

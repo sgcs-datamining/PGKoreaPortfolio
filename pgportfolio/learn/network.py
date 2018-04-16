@@ -87,9 +87,9 @@ class CNN(NeuralNetWork):
                                                  weight_decay=layer["weight_decay"])
                 self.add_layer_to_dict(layer["type"], network)
                 network = network[:, :, 0, 0]
-                btc_bias = tf.ones((self.input_num, 1))
+                krw_bias = tf.ones((self.input_num, 1))
                 self.add_layer_to_dict(layer["type"], network)
-                network = tf.concat([btc_bias, network], 1)
+                network = tf.concat([krw_bias, network], 1)
                 network = tflearn.layers.core.activation(network, activation="softmax")
                 self.add_layer_to_dict(layer["type"], network, weights=False)
             elif layer["type"] == "Output_WithW":
@@ -111,12 +111,12 @@ class CNN(NeuralNetWork):
                                                  weight_decay=layer["weight_decay"])
                 self.add_layer_to_dict(layer["type"], network)
                 network = network[:, :, 0, 0]
-                #btc_bias = tf.zeros((self.input_num, 1))
-                btc_bias = tf.get_variable("btc_bias", [1, 1], dtype=tf.float32,
+                #krw_bias = tf.zeros((self.input_num, 1))
+                krw_bias = tf.get_variable("krw_bias", [1, 1], dtype=tf.float32,
                                        initializer=tf.zeros_initializer)
                 # self.add_layer_to_dict(layer["type"], network, weights=False)
-                btc_bias = tf.tile(btc_bias, [self.input_num, 1])
-                network = tf.concat([btc_bias, network], 1)
+                krw_bias = tf.tile(krw_bias, [self.input_num, 1])
+                network = tf.concat([krw_bias, network], 1)
                 self.voting = network
                 self.add_layer_to_dict('voting', network, weights=False)
                 network = tflearn.layers.core.activation(network, activation="softmax")
