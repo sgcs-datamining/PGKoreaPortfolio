@@ -63,7 +63,7 @@
         "learning_rate": 0.00028,
         "loss_function": "loss_function6",
         "snap_shot": false,
-        "steps": 80000,
+        "steps": 10000,
         "training_method": "Adam"
     }
 }
